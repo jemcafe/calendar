@@ -1,0 +1,128 @@
+$lightblue: #7EB9FF;
+$blue: #517CF7;
+$lightcoolgrey: #E9EDF3;
+$coolgrey: #A7ACB4;
+$darkcoolgrey: #52555C;
+$white: #FFF;
+
+.calendar {
+    text-align: left;
+
+    > .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-bottom: 15px;
+        width: 100%;
+    }
+
+    h1 {
+        width: 100%;
+        text-align: center;
+        font-weight: 50;
+        letter-spacing: 3px;
+        color: $lightblue;
+    }
+
+    .calendar-layout {
+        display: flex;
+        flex-wrap: wrap;
+        border-radius: 5px 5px 0 0;
+        margin: 10px 0;
+        width: 400px;
+        overflow: hidden;
+
+        // The month block, day blocks and the arrows imgs give the calendar it's width
+        .months {
+            display: flex;
+            align-items: center;
+            padding: 20px 0;
+            width: 100%;
+            background-color: $lightblue;
+            .month {
+                flex: 2;
+                text-align: center;
+                color: $white;
+                font-size: 20px;
+                font-weight: bold;
+                // background-color: rgb(201, 192, 255);
+            }
+            .arrow {
+                flex: 1;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            .arrow > img {
+                max-width: 25%;
+                max-height: 30px;
+                // background-color: rgb(255, 240, 192);
+            }
+        }
+
+        .days {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            padding: 0 1px;
+            background-color: rgb(235, 235, 235);
+            .darkGrey { 
+                background-color: rgb(235, 235, 235) 
+            }
+            .lightGrey { 
+                background-color: rgb(247, 247, 247) 
+            }
+            .day {
+                flex: 1;
+                padding: 3px 0;
+                text-align: center;
+                color: $darkcoolgrey;
+                // background-color: #E9EDF3;
+            }
+        }
+
+        .weeks {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            border: 1px solid $coolgrey;
+            border-radius: 0 0 5px 5px;
+            overflow: hidden;
+            // background-color: rgb(192, 255, 247);
+            .week {
+                display: flex;
+                width: 100%;
+                .lightCoolGrey { 
+                    background-color: $lightcoolgrey;
+                }
+                .white { 
+                    background-color: $white;
+                }
+                .blueNum { 
+                    color: $blue; 
+                }
+                .day-block {
+                    flex: 1;
+                    height: 50px;
+                    padding: 2px 0 0 4px;
+                    box-sizing: border-box;
+                    outline: 1px solid $coolgrey;
+                    font-size: 12px;
+                }
+            }
+        }
+
+        .selected-day {
+            margin: 20px 0 0 0;
+            font-size: 16px;
+            color: $darkcoolgrey;
+            
+            .day-date {
+                .day {
+                    font-size: 18px;
+                    color: $blue;
+                }
+            }
+        }
+    }
+}
