@@ -32,7 +32,7 @@ $white: #FFF;
         width: 400px;
         overflow: hidden;
 
-        // The month block, day blocks and the arrows imgs give the calendar it's width
+        // The month block, day block and the arrow images give the calendar it's width
         .months {
             display: flex;
             align-items: center;
@@ -88,7 +88,6 @@ $white: #FFF;
             border: 1px solid $coolgrey;
             border-radius: 0 0 5px 5px;
             overflow: hidden;
-            // background-color: rgb(192, 255, 247);
             .week {
                 display: flex;
                 width: 100%;
@@ -98,8 +97,8 @@ $white: #FFF;
                 .white { 
                     background-color: $white;
                 }
-                .blueNum { 
-                    color: $blue; 
+                .blue { 
+                    color: $blue;
                 }
                 .day-block {
                     flex: 1;
@@ -116,7 +115,6 @@ $white: #FFF;
             margin: 20px 0 0 0;
             font-size: 16px;
             color: $darkcoolgrey;
-            
             .day-date {
                 .day {
                     font-size: 18px;

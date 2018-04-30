@@ -46,36 +46,21 @@ class Calendar extends Component {
 
     handleMonthChange ( direction ) {
         const date = new Date();
-        
-        if ( direction === 'right' ) {
-            this.setState(prevState => {
-                date.setMonth( (date.getMonth() + 1) + (prevState.monthOffset + 1) ); // The month is set to a different month depending on the offset
-                date.setDate( 1 );  // The default day of the month is the first day of the month
-                return { 
-                    yyyy: date.getFullYear(),   // Year
-                    mm: date.getMonth(),        // Month
-                    dd: date.getDate(),         // Day of the Month
-                    day: date.getDay(),         // Day of the week
-                    numOfDays: new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate(),  // The number of days in the month
-                    monthOffset: prevState.monthOffset + 1,  // This value changes the months. Months are offset from the current month
-                    daysOffset: (date.getDate() % 7 !== date.getDay()) ? (date.getDay() - (date.getDate() % 7)) : 0  // This value shifts the days of the month so they're on the correct day on the calendar
-                }
-            });
-        } else {
-            this.setState(prevState => {
-                date.setMonth( (date.getMonth() + 1) + (prevState.monthOffset - 1) );
-                date.setDate( 1 );
-                return {
-                    yyyy: date.getFullYear(),
-                    mm: date.getMonth(),
-                    dd: date.getDate(),
-                    day: date.getDay(),
-                    numOfDays: new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate(),
-                    monthOffset: prevState.monthOffset - 1,
-                    daysOffset: (date.getDate() % 7 !== date.getDay()) ? (date.getDay() - (date.getDate() % 7)) : 0
-                }
-            });
-        }
+        const offset = direction === 'right' ? 1 : -1;
+
+        this.setState(prevState => {
+            const monthOffset = prevState.monthOffset + offset;  // This value changes the months.
+            date.setMonth( (date.getMonth() + 1) + monthOffset, 1 );  // .setmonth(month, day)  Months are offset from the current month and the default day is the first day of the month
+            return { 
+                yyyy: date.getFullYear(),   // Year
+                mm: date.getMonth(),        // Month
+                dd: date.getDate(),         // Day of the Month
+                day: date.getDay(),         // Day of the week
+                numOfDays: new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate(),  // The number of days in the month
+                monthOffset: monthOffset,   // This value changes the months. Months are offset from the current month
+                daysOffset: (date.getDate() % 7 !== date.getDay()) ? (date.getDay() - (date.getDate() % 7)) : 0  // This value shifts the days of the month so they are on the correct day on the calendar
+            }
+        });
     }
 
     selectDay = ( yyyy, mm, dd ) => {
@@ -90,31 +75,48 @@ class Calendar extends Component {
         });
     }
 
+    styleCalendarDay = (day) => {
+        const { yyyy, mm, currentDay } = this.state;
+
+        const d = !day ? 'lightCoolGrey': 'white';
+        const cd = currentDay.yyyy === yyyy && 
+                   currentDay.mm === mm && 
+                   currentDay.dd === day ? 'blue' : '';
+        
+        return `${d} ${cd}`;
+    }
+
     render () {
+        // constants
         const months = ["January", "Feburary", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
         const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-        const weeks = [new Array(days.length), new Array(days.length), new Array(days.length), new Array(days.length), new Array(days.length),new Array(days.length)];
+        const weeks = new Array(6);
         const calendarDays = new Array(weeks.length * days.length);
         
+        // state
         const { yyyy, mm, numOfDays, daysOffset, currentDay, selectedDay } = this.state;
 
+        // Each week has seven days
+        for (let i = 0; i < weeks.length; i++) weeks[i] = new Array(days.length);
+        
+        // Values are assigned to each item in weeks and calendarDays
         for ( let i = 0; i < weeks.length; i++ ) { 
             for ( let j = 0; j < days.length; j++ ) {
                 // The index for all 35 days in the calendar
-                const dayIndex = j + (i * 7);
+                const dayIndex = j + (i * days.length);
 
-                // If the dayIndex is within the specific month's range of days it will have date number
+                // If the dayIndex falls within the month's range of days it will have date number
                 if ( dayIndex > daysOffset && dayIndex <= (numOfDays + daysOffset) ) {
                     calendarDays[dayIndex] = dayIndex - daysOffset;
                 } else {
-                    calendarDays[dayIndex] = '';
+                    calendarDays[dayIndex] = null;
                 }
 
                 // Each day in the calendar is given the right date number
                 weeks[i][j] = calendarDays[dayIndex];
             }
         }
-        
+
         return (
             <div className="calendar">
                 <div className="container">
@@ -129,15 +131,19 @@ class Calendar extends Component {
                         </div>
 
                         <div className="days">
-                            { days.map( (e, i) => <div key={i} className={`day ${i % 2 === 0 ? 'darkGrey' : 'lightGrey'}`}>{ e.slice(0, 3) }</div> ) }
+                            { days.map( (e, i) => ( 
+                            <div key={i} className={`day ${i % 2 === 0 ? 'darkGrey' : 'lightGrey'}`}>{ e.slice(0, 3) }</div> 
+                            )) }
                         </div>
 
                         <div className="weeks">
-                            { weeks.map( (week, i) => (
+                            { weeks.map((week, i) => (
                             <div key={i} className="week">
-                                { week.map( (day, j) => (
-                                <div key={j} className={`day-block ${!day ? 'lightCoolGrey': 'white'} ${currentDay.yyyy === yyyy && currentDay.mm === mm && currentDay.dd === day ? 'blueNum' : ''}`} onClick={() => day ? this.selectDay(yyyy,mm,day) : null}>
-                                     { day }
+                                { week.map((day, j) => (
+                                <div key={j} 
+                                     className={`day-block ${this.styleCalendarDay(day)}`} 
+                                     onClick={() => day ? this.selectDay(yyyy,mm,day) : null}>
+                                    { day }
                                 </div> 
                                 )) }
                             </div>
