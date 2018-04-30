@@ -21,17 +21,18 @@ class Calendar extends Component {
     componentDidMount () {
         // The calendar will always start with the current date
         const date = new Date();
-        const yyyy = date.getFullYear();
-        const mm = date.getMonth();
-        const dd = date.getDate();
-        const day = date.getDay();
-        const numOfDays = new Date(yyyy, mm + 1, 0).getDate();
-        const daysOffset = (dd % 7 !== day) ? (day - (dd % 7)) : 0;
+        const yyyy = date.getFullYear();                            // Year
+        const mm = date.getMonth();                                 // Month
+        const dd = date.getDate();                                  // Day of the month
+        const day = date.getDay();                                  // Day of the Week
+        const numOfDays = new Date(yyyy, mm + 1, 0).getDate();      // Number of days in the month
+        const daysOffset = (dd % 7 !== day) ? (day - (dd % 7)) : 0; // 
 
-        /* daysOffet shifts the days of each month in the calendar, so the date starts on the right day
+        /* daysOffet shifts the days of each month in the calendar, so the date number is on the right day on the calendar
         The ternary checks if the current date in the current week ( % remaining days ) is not equal to the current day
         If it's not, the offset will be the difference between the days remaining and current day
         The default offset value is -1, and 7 is used because there's 7 days in a week. */
+
         this.setState({ 
             yyyy: yyyy,
             dd: dd,
@@ -46,19 +47,25 @@ class Calendar extends Component {
 
     handleMonthChange ( direction ) {
         const date = new Date();
-        const offset = direction === 'right' ? 1 : -1;
+        const offset = direction === 'R' ? 1 : -1;  // This value changes the monthOffset
 
         this.setState(prevState => {
             const monthOffset = prevState.monthOffset + offset;  // This value changes the months.
             date.setMonth( (date.getMonth() + 1) + monthOffset, 1 );  // .setmonth(month, day)  Months are offset from the current month and the default day is the first day of the month
+            const yyyy = date.getFullYear();
+            const mm = date.getMonth();
+            const dd = date.getDate();
+            const day = date.getDay();
+            const numOfDays = new Date(yyyy, mm + 1, 0).getDate();
+            const daysOffset = (dd % 7 !== day) ? (day - (dd % 7)) : 0;
             return { 
-                yyyy: date.getFullYear(),   // Year
-                mm: date.getMonth(),        // Month
-                dd: date.getDate(),         // Day of the Month
-                day: date.getDay(),         // Day of the week
-                numOfDays: new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate(),  // The number of days in the month
-                monthOffset: monthOffset,   // This value changes the months. Months are offset from the current month
-                daysOffset: (date.getDate() % 7 !== date.getDay()) ? (date.getDay() - (date.getDate() % 7)) : 0  // This value shifts the days of the month so they are on the correct day on the calendar
+                yyyy,
+                mm,
+                dd,
+                day,
+                numOfDays,
+                monthOffset,
+                daysOffset
             }
         });
     }
@@ -94,7 +101,7 @@ class Calendar extends Component {
         const calendarDays = new Array(weeks.length * days.length);
         
         // state
-        const { yyyy, mm, numOfDays, daysOffset, currentDay, selectedDay } = this.state;
+        const { yyyy, mm, numOfDays, daysOffset, selectedDay } = this.state;
 
         // Each week has seven days
         for (let i = 0; i < weeks.length; i++) weeks[i] = new Array(days.length);
@@ -102,7 +109,7 @@ class Calendar extends Component {
         // Values are assigned to each item in weeks and calendarDays
         for ( let i = 0; i < weeks.length; i++ ) { 
             for ( let j = 0; j < days.length; j++ ) {
-                // The index for all 35 days in the calendar
+                // The index for each day in the 35 day calendar
                 const dayIndex = j + (i * days.length);
 
                 // If the dayIndex falls within the month's range of days it will have date number
@@ -125,9 +132,9 @@ class Calendar extends Component {
 
                     <div className="calendar-layout">
                         <div className="months">
-                            <div className="arrow" onClick={ () => this.handleMonthChange('left') }><img src={ arrowLeft } alt="left arrow"/></div>
+                            <div className="arrow" onClick={ () => this.handleMonthChange('L') }><img src={ arrowLeft } alt="left arrow"/></div>
                             <div className="month">{ months[mm] } { yyyy }</div>
-                            <div className="arrow" onClick={ () => this.handleMonthChange('right') }><img src={ arrowRight } alt="right arrow"/></div>
+                            <div className="arrow" onClick={ () => this.handleMonthChange('R') }><img src={ arrowRight } alt="right arrow"/></div>
                         </div>
 
                         <div className="days">
