@@ -85,10 +85,10 @@ class Calendar extends Component {
     styleCalendarDay = (day) => {
         const { yyyy, mm, currentDay } = this.state;
 
-        const d = !day ? 'lightCoolGrey': 'white';
+        const d = !day ? 'grey-box': 'white-box';
         const cd = currentDay.yyyy === yyyy && 
                    currentDay.mm === mm && 
-                   currentDay.dd === day ? 'blue' : '';
+                   currentDay.dd === day ? 'current-day' : '';
         
         return `${d} ${cd}`;
     }
@@ -148,7 +148,7 @@ class Calendar extends Component {
                             <div key={i} className="week">
                                 { week.map((day, j) => (
                                 <div key={j} 
-                                     className={`day-block ${this.styleCalendarDay(day)}`} 
+                                     className={`day ${this.styleCalendarDay(day)}`} 
                                      onClick={() => day ? this.selectDay(yyyy,mm,day) : null}>
                                     { day }
                                 </div> 
